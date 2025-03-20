@@ -21,5 +21,10 @@ import GHC.JS.Foreign.Callback (releaseCallback)
 freeRequestAnimationFrameCallback :: RequestAnimationFrameCallback -> JSM ()
 freeRequestAnimationFrameCallback (RequestAnimationFrameCallback cb) = releaseCallback cb
 
+#ifdef __GHCJS__
 foreign import javascript safe "new DataView($3,$1,$2)"
   js_dataView :: Int -> Int -> JSVal -> IO JSVal
+#else
+foreign import javascript safe "((x,y,z) => new DataView(z,x,y))"
+  js_dataView :: Int -> Int -> JSVal -> IO JSVal
+#endif
